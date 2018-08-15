@@ -7,10 +7,15 @@ target 'mensa-tu-dresden' do
 
   # Pods for mensa-tu-dresden
   pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Storage'
+  pod 'Firebase/Database'
   pod 'Kanna'
   pod 'Alamofire'
   pod 'Material'
   pod 'Motion'
-  pod 'SkeletonView'
+  #pod 'ReachabilitySwift'
+  pod 'FlyoverKit', :git => 'https://github.com/philippmatthes/FlyoverKit.git'
+  #pod 'SkeletonView'
 
 end

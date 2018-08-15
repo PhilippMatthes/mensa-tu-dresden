@@ -15,7 +15,7 @@ class NiceTableViewCell: TableViewCell {
     
     static let textLabelFont = RobotoFont.medium(with: 16.0)
     static let detailTextLabelFont = RobotoFont.light(with: 15.0)
-    static let highlightedBackgroundColor = UIColor(rgb: 0x34495e)
+    static let highlightedBackgroundColor = Colors.backgroundColor
     
     override func prepare() {
         super.prepare()

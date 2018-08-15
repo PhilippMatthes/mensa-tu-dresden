@@ -22,4 +22,11 @@ extension String {
         }
         return attributedString
     }
+    
+    func attributed(withBackgroundColor color: UIColor) -> NSAttributedString {
+        let attributedString = NSMutableAttributedString(string: self)
+        let range = NSRange(location: 0, length: self.utf16.count)
+        attributedString.addAttribute(NSAttributedString.Key.backgroundColor, value: color, range: range)
+        return attributedString
+    }
 }
