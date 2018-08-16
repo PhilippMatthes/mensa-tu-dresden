@@ -13,7 +13,7 @@ import FirebaseStorage
 import FirebaseAnalytics
 import FirebaseDatabase
 
-class RatingController: UIViewController {
+class RatingController: UIViewController, DonationDelegate {
     
     @IBOutlet weak var starButton1: IconButton!
     @IBOutlet weak var starButton2: IconButton!
@@ -21,6 +21,8 @@ class RatingController: UIViewController {
     @IBOutlet weak var starButton4: IconButton!
     @IBOutlet weak var starButton5: IconButton!
     @IBOutlet weak var textView: TextView!
+    
+    var heart: IconButton!
     
     var rating: Int?
     var meal: Meal!
@@ -35,7 +37,7 @@ class RatingController: UIViewController {
         let child = MensaDatabase.ratingsReference(meal: meal).child(Authentication.user.uid)
         self.prepareStars()
         self.prepareTextField()
-        self.prepareSendButton()
+        self.prepareNavigationBar()
         child.observeSingleEvent(of: DataEventType.value) {
             snapshot in
             guard let value = snapshot.value else {return}
@@ -60,11 +62,22 @@ class RatingController: UIViewController {
         textView.delegate = self
     }
     
-    func prepareSendButton() {
+    func prepareNavigationBar() {
+        heart = IconButton(image: Icon.favorite)
+        heart.addTarget(self, action: #selector(showDonationController), for: .touchUpInside)
+        heart.tintColor = Colors.loveButtonColor
+        
         let sendButton = IconButton(image: Icon.cm.share)
         sendButton.addTarget(self, action: #selector(sendRating), for: .touchUpInside)
         navigationItem.rightViews = [sendButton]
         navigationController?.navigationBar.tintColor = Colors.colorFor(string: meal.mensa)
+    }
+    
+    @objc func showDonationController() {
+        let donationController = DonationController.fromStoryboard()
+        donationController.modalPresentationStyle = .overCurrentContext
+        donationController.delegate = self
+        present(donationController, animated: true)
     }
     
     static func fromStoryboard() -> RatingController {
@@ -116,6 +129,10 @@ class RatingController: UIViewController {
             alert.addAction(UIAlertAction(title: "Alles klar", style: .default, handler: nil))
             self.present(alert, animated: true)
         }
+    }
+    
+    func didDonate() {
+        heart.tintColor = Colors.loveButtonColor
     }
     
 }

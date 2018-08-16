@@ -9,10 +9,12 @@
 import Foundation
 import Material
 
-class MensaController: TableViewController {
+class MensaController: TableViewController, DonationDelegate {
     
     var mensas = [Mensa]()
     var filteredMensas = [Mensa]()
+    
+    var heart: IconButton!
     
     var search: String?
     
@@ -66,7 +68,23 @@ class MensaController: TableViewController {
         icon.addTarget(self, action: #selector(toggleSearchBar), for: .touchUpInside)
         icon.tintColor = Colors.backgroundColor
         
+        heart = IconButton(image: Icon.favorite)
+        heart.addTarget(self, action: #selector(showDonationController), for: .touchUpInside)
+        heart.tintColor = Colors.loveButtonColor
+        
         searchBar.leftViews = [icon]
+        searchBar.rightViews = [heart]
+    }
+    
+    @objc func showDonationController() {
+        let donationController = DonationController.fromStoryboard()
+        donationController.modalPresentationStyle = .overCurrentContext
+        donationController.delegate = self
+        present(donationController, animated: true)
+    }
+    
+    func didDonate() {
+        heart.tintColor = Colors.loveButtonColor
     }
     
     @objc func toggleSearchBar() {

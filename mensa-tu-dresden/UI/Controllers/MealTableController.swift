@@ -11,7 +11,7 @@ import Material
 import FlyoverKit
 import MapKit
 
-class MealTableController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MealTableController: UIViewController, UITableViewDataSource, UITableViewDelegate, DonationDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: TableView!
@@ -19,6 +19,9 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var button: FlatButton!
     @IBOutlet weak var buttonHeight: NSLayoutConstraint!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
+    
+    var heart: IconButton!
+    
     var meals = [Meal]()
     var filteredMeals = [Meal]()
     var search: String?
@@ -128,12 +131,27 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
         icon.addTarget(self, action: #selector(toggleSearchBar), for: .touchUpInside)
         icon.tintColor = Colors.colorFor(string: mensa.name)
         
+        heart = IconButton(image: Icon.favorite)
+        heart.addTarget(self, action: #selector(showDonationController), for: .touchUpInside)
+        heart.tintColor = Colors.loveButtonColor
+        
         let backicon = IconButton(image: Icon.cm.arrowBack)
         backicon.addTarget(self, action: #selector(back), for: .touchUpInside)
         backicon.tintColor = Colors.colorFor(string: mensa.name)
         
-        searchBar.rightViews = [icon]
+        searchBar.rightViews = [icon, heart]
         searchBar.leftViews = [backicon]
+    }
+    
+    @objc func showDonationController() {
+        let donationController = DonationController.fromStoryboard()
+        donationController.modalPresentationStyle = .overCurrentContext
+        donationController.delegate = self
+        present(donationController, animated: true)
+    }
+    
+    func didDonate() {
+        heart.tintColor = Colors.loveButtonColor
     }
     
     func prepareTableView() {

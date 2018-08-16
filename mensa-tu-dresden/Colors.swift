@@ -22,6 +22,12 @@ class Colors {
         UIColor(rgb: 0xa55eea),
     ]
     
+    static var loveButtonColor: UIColor {
+        get {
+            return Donation.userHasDonated ? redColor : Color.grey.lighten2
+        }
+    }
+    
     static func colorFor(tag: NSLinguisticTag) -> UIColor {
         var index = 0
         switch tag {

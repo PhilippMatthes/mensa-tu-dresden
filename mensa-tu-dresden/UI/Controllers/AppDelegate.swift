@@ -57,11 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 if important {
                     title = "Es gibt \(meal.name)!"
                     subtitle = "Hier: \(meal.mensa)"
-                    body = "In der Mensa \(meal.mensa) gibt es heute \(meal.name)!\nDu bekommst diese Nachricht, weil dieses Gericht deinem favorisiertem Essen \"\(similarity.meal.name)\" fast gleicht." + (" Stichwörter: \(similarity.meal.tokens?.joined(separator: ", ") ?? "")")
+                    body = "In der Mensa \(meal.mensa) gibt es heute \(meal.name)!\n" + (" Stichwörter: \(similarity.meal.tokens?.joined(separator: ", ") ?? "")")
                 } else if lessImportant {
                     title = "Dieses Essen könnte dir schmecken!"
                     subtitle = "\(meal.name)"
-                    body = "In der Mensa \(meal.mensa) gibt es heute \(meal.name).\nDu bekommst diese Nachricht, weil dieses Gericht deinem favorisiertem Essen \"\(similarity.meal.name)\" ähnelt." + (" Stichwörter: \(similarity.meal.tokens?.joined(separator: ", ") ?? "")")
+                    body = "In der Mensa \(meal.mensa) gibt es heute \(meal.name).\n" + (" Stichwörter: \(similarity.meal.tokens?.joined(separator: ", ") ?? "")")
                 } else {
                     continue
                 }
