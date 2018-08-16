@@ -20,7 +20,7 @@ struct MealDetails {
     let title: String
     let imageSrc: String?
     let description: String
-    let prices: String
+    let prices: String?
     
     static func all(link: String, completion: @escaping (MealDetails) -> ()) {
         Alamofire.request(link).response {
@@ -30,9 +30,9 @@ struct MealDetails {
                 let html = String(data: data, encoding: .utf8),
                 let kannaHtml = try? Kanna.HTML(html: html, encoding: .utf8),
                 let title = kannaHtml.xpath("//*[@id='speiseplandetails']/h1").first?.text,
-                let description = kannaHtml.xpath("//*[@id='speiseplanessentext']").first?.text,
-                let prices = kannaHtml.xpath("//*[@id='preise']").first?.text
-                else {return}
+                let description = kannaHtml.xpath("//*[@id='speiseplanessentext']").first?.text
+            else {return}
+            let prices = kannaHtml.xpath("//*[@id='preise']").first?.text
             let src = kannaHtml.xpath("//*[@id='essenfoto']/img").first?["src"] ?? kannaHtml.xpath("//*[@id='essenbild']/img").first?["src"]
             let computedSrc = src != nil ? "https:\(src!)" : nil
             completion(MealDetails(title: title, imageSrc: computedSrc, description: description, prices: prices))

@@ -162,7 +162,7 @@ class MealDetailController: UIViewController, UITableViewDataSource, UITableView
             heightConstraint.constant = 100
             UIView.animate(withDuration: 0.3) {
                 if let details = self.mealDetails {
-                    self.upperLabel.text = "\(details.description)\n\(details.prices)"
+                    self.upperLabel.text = "\(details.description)\n\(details.prices ?? "Keine Preisangabe")"
                 }
                 self.imageView.alpha = 0.7
                 self.view.layoutIfNeeded()
