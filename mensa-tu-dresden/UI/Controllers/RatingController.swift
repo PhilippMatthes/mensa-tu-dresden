@@ -13,7 +13,7 @@ import FirebaseStorage
 import FirebaseAnalytics
 import FirebaseDatabase
 
-class RatingController: UIViewController, DonationDelegate {
+class RatingController: UIViewController {
     
     @IBOutlet weak var starButton1: IconButton!
     @IBOutlet weak var starButton2: IconButton!
@@ -21,8 +21,6 @@ class RatingController: UIViewController, DonationDelegate {
     @IBOutlet weak var starButton4: IconButton!
     @IBOutlet weak var starButton5: IconButton!
     @IBOutlet weak var textView: TextView!
-    
-    var heart: IconButton!
     
     var rating: Int?
     var meal: Meal!
@@ -32,6 +30,7 @@ class RatingController: UIViewController, DonationDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = Colors.colorFor(string: meal.mensa)
         
         let child = MensaDatabase.ratingsReference(meal: meal).child(Authentication.user.uid)
@@ -62,11 +61,7 @@ class RatingController: UIViewController, DonationDelegate {
         textView.delegate = self
     }
     
-    func prepareNavigationBar() {
-        heart = IconButton(image: Icon.favorite)
-        heart.addTarget(self, action: #selector(showDonationController), for: .touchUpInside)
-        heart.tintColor = Colors.loveButtonColor
-        
+    func prepareNavigationBar() {        
         let sendButton = IconButton(image: Icon.cm.share)
         sendButton.addTarget(self, action: #selector(sendRating), for: .touchUpInside)
         navigationItem.rightViews = [sendButton]
@@ -76,7 +71,6 @@ class RatingController: UIViewController, DonationDelegate {
     @objc func showDonationController() {
         let donationController = DonationController.fromStoryboard()
         donationController.modalPresentationStyle = .overCurrentContext
-        donationController.delegate = self
         present(donationController, animated: true)
     }
     
@@ -116,7 +110,8 @@ class RatingController: UIViewController, DonationDelegate {
     
     @objc func sendRating() {
         if let rating = self.rating, let text = textView.text, text != "" {
-            let postableRating = Rating(stars: rating, comment: text)
+            let userName = Authentication.user.displayName ?? "Anonymer Nutzer"
+            let postableRating = Rating(stars: rating, comment: text, userName: userName)
             postableRating.publish(aboutMeal: meal)
             navigationController?.popViewController(animated: true)
         } else {
@@ -129,10 +124,6 @@ class RatingController: UIViewController, DonationDelegate {
             alert.addAction(UIAlertAction(title: "Alles klar", style: .default, handler: nil))
             self.present(alert, animated: true)
         }
-    }
-    
-    func didDonate() {
-        heart.tintColor = Colors.loveButtonColor
     }
     
 }

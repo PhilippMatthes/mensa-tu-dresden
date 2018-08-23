@@ -10,16 +10,10 @@ import Foundation
 import StoreKit
 import Material
 
-protocol DonationDelegate {
-    func didDonate()
-}
-
 class DonationController: UIViewController, SKProductsRequestDelegate {
     
     var request: SKProductsRequest!
     var supporterProduct: SKProduct!
-    
-    var delegate: DonationDelegate?
     
     @IBOutlet weak var button: IconButton!
     @IBOutlet weak var closeButton: IconButton!
@@ -70,6 +64,12 @@ class DonationController: UIViewController, SKProductsRequestDelegate {
         label.textColor = Colors.backgroundColor
         
         backgroundView.layer.cornerRadius = 10.0
+        
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        view.layout(blurredEffectView).top().bottom().left().right()
+        blurredEffectView.isUserInteractionEnabled = false
+        blurredEffectView.layer.zPosition = -1
     }
     
     func adjustToDonationStatus() {
@@ -83,7 +83,8 @@ class DonationController: UIViewController, SKProductsRequestDelegate {
     }
     
     @objc func purchase() {
-        let payment = SKPayment(product: self.supporterProduct)
+        guard let supporterProduct = self.supporterProduct else {return}
+        let payment = SKPayment(product: supporterProduct)
         SKPaymentQueue.default().add(payment)
         showLoadingIndicator()
     }
@@ -130,7 +131,6 @@ extension DonationController: SKPaymentTransactionObserver {
                 Donation.userHasDonated = true
                 adjustToDonationStatus()
                 queue.finishTransaction(transaction)
-                delegate?.didDonate()
             case .failed:
                 print("Failed")
                 queue.finishTransaction(transaction)
@@ -145,7 +145,6 @@ extension DonationController: SKPaymentTransactionObserver {
         Donation.userHasDonated = true
         adjustToDonationStatus()
         showUI()
-        delegate?.didDonate()
     }
     
 }

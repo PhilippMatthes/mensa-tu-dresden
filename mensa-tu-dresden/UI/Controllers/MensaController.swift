@@ -9,19 +9,15 @@
 import Foundation
 import Material
 
-class MensaController: TableViewController, DonationDelegate {
+class MensaController: TableViewController {
     
     var mensas = [Mensa]()
     var filteredMensas = [Mensa]()
-    
-    var heart: IconButton!
     
     var search: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        prepareSearchBar()
         
         tableView.register(NiceTableViewCell.self, forCellReuseIdentifier: NiceTableViewCell.identifier)
         
@@ -34,6 +30,19 @@ class MensaController: TableViewController, DonationDelegate {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        (searchBarController as? AppSearchBarController)?.setBackButtonIsHidden(true)
+    }
+    
+    @objc func logout() {
+        if Authentication.loginType == .anonymous {
+            navigationController?.popToRootViewController(animated: true)
+        } else {
+            Authentication.signOut()
         }
     }
     
@@ -55,45 +64,11 @@ class MensaController: TableViewController, DonationDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let mensa = mensas[indexPath.row]
+        let mensa = filteredMensas[indexPath.row]
         let controller = MealTableController.fromStoryboard(mensa: mensa)
         navigationController?.pushViewController(controller, animated: true)
     }
     
-    func prepareSearchBar() {
-        guard let searchBar = searchBarController?.searchBar else {return}
-        searchBar.delegate = self
-        
-        let icon = IconButton(image: Icon.cm.search)
-        icon.addTarget(self, action: #selector(toggleSearchBar), for: .touchUpInside)
-        icon.tintColor = Colors.backgroundColor
-        
-        heart = IconButton(image: Icon.favorite)
-        heart.addTarget(self, action: #selector(showDonationController), for: .touchUpInside)
-        heart.tintColor = Colors.loveButtonColor
-        
-        searchBar.leftViews = [icon]
-        searchBar.rightViews = [heart]
-    }
-    
-    @objc func showDonationController() {
-        let donationController = DonationController.fromStoryboard()
-        donationController.modalPresentationStyle = .overCurrentContext
-        donationController.delegate = self
-        present(donationController, animated: true)
-    }
-    
-    func didDonate() {
-        heart.tintColor = Colors.loveButtonColor
-    }
-    
-    @objc func toggleSearchBar() {
-        if searchBarController?.searchBar.textField.isFirstResponder ?? false {
-            searchBarController?.searchBar.endEditing(true)
-        } else {
-            searchBarController?.searchBar.textField.becomeFirstResponder()
-        }
-    }
 }
 
 extension MensaController: SearchBarDelegate {
@@ -106,12 +81,12 @@ extension MensaController: SearchBarDelegate {
     func filterMensas() {
         if let search = self.search {
             if search == "" {
-                filteredMensas = mensas
+                filteredMensas = mensas.sorted {$0.name < $1.name}
             } else {
                 filteredMensas = mensas.filter {$0.name.lowercased().range(of: search) != nil || $0.location.lowercased().range(of: search) != nil}
             }
         } else {
-            filteredMensas = mensas
+            filteredMensas = mensas.sorted {$0.name < $1.name}
         }
         DispatchQueue.main.async {
             self.tableView.reloadData()

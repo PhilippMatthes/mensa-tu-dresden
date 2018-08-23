@@ -17,12 +17,11 @@ import FirebaseStorage
 class MealDetailController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
-    
-    var meal: Meal!
     @IBOutlet weak var upperLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var tableView: TableView!
     
+    var meal: Meal!
     var ratings = [Rating]()
     var mealDetails: MealDetails?
     
@@ -37,6 +36,7 @@ class MealDetailController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = UIColor(rgb: 0x34495e)
         prepareObserver()
         prepareLabels()

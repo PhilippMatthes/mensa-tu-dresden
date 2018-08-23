@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14306.4" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14278.2"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -13,33 +12,31 @@
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
             <objects>
-                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="01J-lp-oVM" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mensa-tu-dresden" translatesAutoresizingMaskIntoConstraints="NO" id="bH3-8u-nJu">
-                                <rect key="frame" x="137.5" y="283.5" width="100" height="100"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dUQ-AB-rcF">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="fgE-hV-yBQ"/>
-                                    <constraint firstAttribute="width" constant="100" id="gCA-f0-TmL"/>
+                                    <constraint firstAttribute="height" constant="70" id="6xK-h1-Xxp"/>
                                 </constraints>
-                            </imageView>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.27843137254901962" blue="0.3411764705882353" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="bH3-8u-nJu" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="3eE-4V-HUr"/>
-                            <constraint firstItem="bH3-8u-nJu" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="9Sn-d3-hcK"/>
+                            <constraint firstItem="dUQ-AB-rcF" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="7pU-zH-kXl"/>
+                            <constraint firstItem="dUQ-AB-rcF" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="RXS-PZ-MHe"/>
+                            <constraint firstItem="dUQ-AB-rcF" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="itj-F5-RpF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="50.625" y="373.94366197183098"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="mensa-tu-dresden" width="1000" height="1000"/>
-    </resources>
 </document>

@@ -24,6 +24,7 @@ struct Rating {
     let stars: Int
     let comment: String
     let createdBy: String
+    let userName: String
     var votes: [String: Int]
     
     var reference: DatabaseReference?
@@ -40,12 +41,14 @@ struct Rating {
             "comment": comment,
             "createdBy": createdBy,
             "votes": votes,
+            "userName": userName
         ]
     }
     
-    init(stars: Int, comment: String, votesReference: DatabaseReference? = nil) {
+    init(stars: Int, comment: String, userName: String, votesReference: DatabaseReference? = nil) {
         self.stars = stars
         self.comment = comment
+        self.userName = userName
         self.createdBy = Authentication.user.uid
         self.votes = [Authentication.user.uid : 1]
         self.reference = votesReference
@@ -55,12 +58,14 @@ struct Rating {
         guard
             let data = value as? [String: Any],
             let stars = data["stars"] as? Int,
+            let userName = data["userName"] as? String,
             let comment = data["comment"] as? String,
             let createdBy = data["createdBy"] as? String,
             let votes = data["votes"] as? [String: Int]
-            else {return nil}
+        else {return nil}
         self.stars = stars
         self.comment = comment
+        self.userName = userName
         self.createdBy = createdBy
         self.votes = votes
         self.reference = votesReference

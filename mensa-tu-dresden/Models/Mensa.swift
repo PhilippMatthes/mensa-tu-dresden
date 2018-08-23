@@ -33,31 +33,37 @@ struct Mensa {
         }
     }
     
-    func annotation(completion: @escaping (MKAnnotation) -> ()) {
+    func annotation(completion: @escaping (MKAnnotation, String) -> ()) {
         location() {
-            location in
+            location, address in
             let annotation = MKPointAnnotation()
             annotation.coordinate = location.coordinate
             annotation.title = self.name
-            completion(annotation)
+            annotation.subtitle = address
+            completion(annotation, address)
         }
     }
     
-    func location(completion: @escaping (CLLocation) -> ()) {
+    func location(completion: @escaping (CLLocation, String) -> ()) {
         Alamofire.request(detailsUrl).response {
             response in
             guard
                 let data = response.data,
                 let html = String(data: data, encoding: .utf8),
-                let kannaHtml = try? Kanna.HTML(html: html, encoding: .utf8),
-                let addressString = kannaHtml.xpath("//*[@id='mensadetailslinks']").first?.text
+                let kannaHtml = try? Kanna.HTML(html: html, encoding: .utf8)
             else {return}
-            CLGeocoder().geocodeAddressString(addressString) {
+            let address = kannaHtml.xpath("//*[@id='mensadetailslinks']/text()")
+                .map{$0.text}
+                .compactMap{$0}
+                .filter{$0 != "\n"}
+                .joined(separator: " ")
+            print(address)
+            CLGeocoder().geocodeAddressString(address) {
                 placemarks, error in
                 guard
                     let location = placemarks?.first?.location
                 else {return}
-                completion(location)
+                completion(location, address)
             }
         }
     }

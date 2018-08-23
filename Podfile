@@ -6,6 +6,14 @@ target 'mensa-tu-dresden' do
   use_frameworks!
 
   # Pods for mensa-tu-dresden
+pod "MIBadgeButton-Swift", :git => 'https://github.com/mustafaibrahim989/MIBadgeButton-Swift.git'
+#pod 'RKNotificationHub'
+  pod 'FBSDKLoginKit'
+  pod 'GoogleSignIn'
+  #pod 'FirebaseUI'
+  #pod 'FirebaseUI/Auth'
+  #pod 'FirebaseUI/Google'
+  #pod 'FirebaseUI/Facebook'
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Storage'

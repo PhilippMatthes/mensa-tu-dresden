@@ -9,9 +9,10 @@
 import Foundation
 import Material
 import FlyoverKit
+import FirebaseAuth
 import MapKit
 
-class MealTableController: UIViewController, UITableViewDataSource, UITableViewDelegate, DonationDelegate {
+class MealTableController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var tableView: TableView!
@@ -20,23 +21,31 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet weak var buttonHeight: NSLayoutConstraint!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
-    var heart: IconButton!
     
     var meals = [Meal]()
     var filteredMeals = [Meal]()
     var search: String?
     var mensa: Mensa!
     
+    private var requestHasCompleted = false
+    private var hasMeals: Bool {
+        return filteredMeals.count != 0
+    }
+    
     var annotation: MKAnnotation?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         prepareFlyOverMapView()
-        prepareSearchBar()
         prepareTableView()
         prepareNavigationBar()
+        
+        searchBarController?.searchBar.delegate = self
+        
         Meal.thisWeek(forMensa: mensa) {
             meals in
+            self.requestHasCompleted = true
             self.meals = meals
             self.filteredMeals = meals
             DispatchQueue.main.async {
@@ -45,12 +54,11 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    static func fromStoryboard(mensa: Mensa) -> SearchBarController {
+    static func fromStoryboard(mensa: Mensa) -> AppSearchBarController {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let mealController = storyBoard.instantiateViewController(withIdentifier: "MealTableController") as! MealTableController
         mealController.mensa = mensa
-        let searchController = SearchBarController(rootViewController: mealController)
-        searchController.searchBar.placeholder = "Suchen"
+        let searchController = AppSearchBarController(rootViewController: mealController, tintColor: Colors.colorFor(string: mensa.name))
         return searchController
     }
     
@@ -59,8 +67,13 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
         navigationController?.setNavigationBarHidden(true, animated: true)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        (searchBarController as? AppSearchBarController)?.setBackButtonIsHidden(false)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredMeals.count
+        return hasMeals ? filteredMeals.count : 1
     }
     
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -69,10 +82,19 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NiceTableViewCell.identifier) as? NiceTableViewCell else {return UITableViewCell()}
-        let meal = filteredMeals[indexPath.row]
-        cell.textLabel?.text = meal.name
-        cell.detailTextLabel?.text = meal.dateOrDescription
-        cell.backgroundColor = Colors.colorFor(string: meal.mensa)
+        
+        if !requestHasCompleted {
+            cell.textLabel?.text = "Lade Angebote..."
+            cell.detailTextLabel?.text = "Es könnten trotzdem Angebote verfügbar sein. Bitte informieren Sie sich auf der Website des Studentenwerks!"
+        } else if !hasMeals {
+            cell.textLabel?.text = "Kein Angebot gefunden."
+            cell.detailTextLabel?.text = "Es könnten trotzdem Angebote verfügbar sein. Bitte informieren Sie sich auf der Website des Studentenwerks!"
+        } else {
+            let meal = filteredMeals[indexPath.row]
+            cell.textLabel?.text = meal.name
+            cell.detailTextLabel?.text = meal.dateOrDescription
+        }
+        cell.backgroundColor = Colors.colorFor(string: mensa.name)
         cell.pulseColor = .white
 
         if let search = self.search {
@@ -93,10 +115,11 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
         mapView.addGestureRecognizer(longPressRecognizer)
         
         mensa.annotation() {
-            annotation in
+            annotation, address in
             self.annotation = annotation
             self.mapView.addAnnotation(annotation)
             self.mapView.showAnnotations([annotation], animated: true)
+            self.mapView.selectAnnotation(annotation, animated: true)
             self.mapView.showsCompass = false
             
             if #available(iOS 10.0, *) {
@@ -121,55 +144,10 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
         navigationItem.titleLabel.text = "Essensangebot"
     }
     
-    func prepareSearchBar() {
-        guard let searchBar = searchBarController?.searchBar else {return}
-        searchBar.delegate = self
-        
-        searchBar.placeholder = "Suchen"
-        
-        let icon = IconButton(image: Icon.cm.search)
-        icon.addTarget(self, action: #selector(toggleSearchBar), for: .touchUpInside)
-        icon.tintColor = Colors.colorFor(string: mensa.name)
-        
-        heart = IconButton(image: Icon.favorite)
-        heart.addTarget(self, action: #selector(showDonationController), for: .touchUpInside)
-        heart.tintColor = Colors.loveButtonColor
-        
-        let backicon = IconButton(image: Icon.cm.arrowBack)
-        backicon.addTarget(self, action: #selector(back), for: .touchUpInside)
-        backicon.tintColor = Colors.colorFor(string: mensa.name)
-        
-        searchBar.rightViews = [icon, heart]
-        searchBar.leftViews = [backicon]
-    }
-    
-    @objc func showDonationController() {
-        let donationController = DonationController.fromStoryboard()
-        donationController.modalPresentationStyle = .overCurrentContext
-        donationController.delegate = self
-        present(donationController, animated: true)
-    }
-    
-    func didDonate() {
-        heart.tintColor = Colors.loveButtonColor
-    }
-    
     func prepareTableView() {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(NiceTableViewCell.self, forCellReuseIdentifier: NiceTableViewCell.identifier)
-    }
-    
-    @objc func back() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    @objc func toggleSearchBar() {
-        if searchBarController?.searchBar.textField.isFirstResponder ?? false {
-            searchBarController?.searchBar.endEditing(true)
-        } else {
-            searchBarController?.searchBar.textField.becomeFirstResponder()
-        }
     }
     
     @objc func mapViewLongPressed(sender: UILongPressGestureRecognizer) {
@@ -184,6 +162,7 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard hasMeals else {return}
         let meal = filteredMeals[indexPath.row]
         let mealDetailController = MealDetailController.fromStoryboard(meal: meal)
         let fabMenuController = AppFABMenuController(rootViewController: mealDetailController)

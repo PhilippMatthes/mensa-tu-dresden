@@ -9,14 +9,16 @@
 import Foundation
 import Material
 
-class AppChipBarController: ChipBarController, DonationDelegate {
+class AppChipBarController: ChipBarController {
     
     var meal: Meal!
     var tokens: [Token]!
     var likeButton: IconButton!
     var showsTokens = false
     
-    var heart: IconButton!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
     
     override func prepare() {
         super.prepare()
@@ -69,11 +71,7 @@ class AppChipBarController: ChipBarController, DonationDelegate {
         likeButton.tintColor = meal.isTracked() ? color : Colors.backgroundColor
         likeButton.addTarget(self, action: #selector(likeButtonTouched(sender:)), for: .touchUpInside)
         
-        heart = IconButton(image: Icon.favorite)
-        heart.addTarget(self, action: #selector(showDonationController), for: .touchUpInside)
-        heart.tintColor = Colors.loveButtonColor
-        
-        navigationItem.rightViews = [likeButton, heart]
+        navigationItem.rightViews = [likeButton]
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.navigationBar.tintColor = color
     }
@@ -81,12 +79,7 @@ class AppChipBarController: ChipBarController, DonationDelegate {
     @objc func showDonationController() {
         let donationController = DonationController.fromStoryboard()
         donationController.modalPresentationStyle = .overCurrentContext
-        donationController.delegate = self
         present(donationController, animated: true)
-    }
-    
-    func didDonate() {
-        heart.tintColor = Colors.loveButtonColor
     }
     
     @objc func likeButtonTouched(sender: IconButton) {

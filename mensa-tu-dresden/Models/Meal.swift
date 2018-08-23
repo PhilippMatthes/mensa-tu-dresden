@@ -33,29 +33,39 @@ struct Meal: Codable, Equatable {
         return rhs.mensa == lhs.mensa && rhs.name == lhs.name
     }
     
-    static func trackedMeals() -> [Meal]? {
-        guard let data = UserDefaults.standard.object(forKey: "trackedMeals") as? Data else {return nil}
-        return try? JSONDecoder().decode([Meal].self, from: data)
+    private static var trackedMealsCached: [Meal]?
+    static var trackedMeals: [Meal]? {
+        get {
+            if let cached = trackedMealsCached {
+                return cached
+            }
+            guard let data = UserDefaults.standard.object(forKey: "trackedMeals") as? Data else {return nil}
+            trackedMealsCached = try? JSONDecoder().decode([Meal].self, from: data)
+            return trackedMealsCached
+        }
+        set {
+            trackedMealsCached = newValue
+            guard
+                let newValue = newValue,
+                let data = try? JSONEncoder().encode(newValue)
+            else {return}
+            UserDefaults.standard.set(data, forKey: "trackedMeals")
+        }
     }
     
     func isTracked() -> Bool {
-        guard let meals = Meal.trackedMeals() else {return false}
+        guard let meals = Meal.trackedMeals else {return false}
         return meals.contains(self)
     }
     
     mutating func track(forTokens tokens: [Token]) {
         self.tokens = tokens.map {$0.text}
-        var trackedMeals = Meal.trackedMeals() ?? [Meal]()
-        trackedMeals.append(self)
-        guard let data = try? JSONEncoder().encode(trackedMeals) else {return}
-        UserDefaults.standard.set(data, forKey: "trackedMeals")
+        Meal.trackedMeals = (Meal.trackedMeals ?? [Meal]()) + [self]
     }
     
     func untrack() {
-        guard let meals = Meal.trackedMeals() else {return}
-        let trackedMeals = meals.filter {$0 != self}
-        guard let data = try? JSONEncoder().encode(trackedMeals) else {return}
-        UserDefaults.standard.set(data, forKey: "trackedMeals")
+        guard let meals = Meal.trackedMeals else {return}
+        Meal.trackedMeals = meals.filter {$0 != self}
     }
     
     struct Similarity {
@@ -64,7 +74,7 @@ struct Meal: Codable, Equatable {
     }
     
     func highestSimilarityToOneOfStoredMeals() -> Similarity? {
-        guard let meals = Meal.trackedMeals() else {return nil}
+        guard let meals = Meal.trackedMeals else {return nil}
         let filteredMeals = meals.filter{$0.tokens != nil}
         let words = self.name.components(separatedBy: CharacterSet.alphanumerics.inverted).filter {!$0.isEmpty}
         guard
@@ -115,10 +125,15 @@ struct Meal: Codable, Equatable {
             guard
                 let data = response.data,
                 let html = String(data: data, encoding: .utf8),
-                let kannaHtml = try? Kanna.HTML(html: html, encoding: .utf8)
-                else {return}
+                let kannaHtml = try? Kanna.HTML(html: html, encoding: .utf8),
+                let title = kannaHtml.xpath("//*[@id='spalterechtsnebenmenue']/h1/a").first?.text
+            else {return}
             let mensasHtml = kannaHtml.xpath("//*[@id='spalterechtsnebenmenue']/table")
             var meals = [Meal]()
+            if let mensa = mensa, !title.starts(with: "Speiseplan \(mensa.name)") {
+                completion(meals)
+                return
+            }
             for html in mensasHtml {
                 guard let dateOrDescription = html.xpath("./thead/tr/th[@class='text']").first?.text else {continue}
                 let mensaMeals = html.xpath("./tbody/tr/td[@class='text']/a").map{

@@ -14,6 +14,10 @@ class AppFABMenuController: FABMenuController {
     
     var meal: Meal!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     open override func prepare() {
         super.prepare()
         view.backgroundColor = .white

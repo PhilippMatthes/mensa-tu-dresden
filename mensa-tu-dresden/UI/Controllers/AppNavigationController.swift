@@ -10,6 +10,10 @@ import Foundation
 import Material
 
 class AppNavigationController: NavigationController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+    
     open override func prepare() {
         super.prepare()
     }

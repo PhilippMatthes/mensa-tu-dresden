@@ -25,6 +25,7 @@ class NiceTableViewCell: TableViewCell {
         detailTextLabel?.numberOfLines = 0
         detailTextLabel?.font = NiceTableViewCell.detailTextLabelFont
         detailTextLabel?.textColor = .white
+        pulseColor = .white
     }
     
     func highlight(search: String) {
