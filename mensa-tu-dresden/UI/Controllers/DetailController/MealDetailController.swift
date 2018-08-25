@@ -95,8 +95,10 @@ class MealDetailController: UIViewController, UITableViewDataSource, UITableView
     
     func prepareObserver() {
         ref = MensaDatabase.ratingsReference(meal: meal)
+        tableView.activityIndicatorView.startAnimating()
         ref.observe(DataEventType.value) {
             (snapshot) in
+            self.tableView.activityIndicatorView.stopAnimating()
             guard
                 let dict = snapshot.value as? [String : AnyObject]
             else {return}

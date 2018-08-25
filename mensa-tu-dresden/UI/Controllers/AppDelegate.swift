@@ -23,10 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         FirebaseApp.configure()
         // FBSDKApplicationDelegate.sharedInstance()?.application(application, didFinishLaunchingWithOptions: launchOptions)
         
-        let loginController = LoginController.fromStoryboard()
+        let dsgvoController = DSGVOController()
         
         window = UIWindow(frame: Screen.bounds)
-        window!.rootViewController = loginController
+        window!.rootViewController = dsgvoController
         window!.makeKeyAndVisible()
         
         UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)

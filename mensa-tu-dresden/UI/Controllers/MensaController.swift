@@ -19,12 +19,14 @@ class MensaController: TableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tableView.activityIndicatorView.startAnimating()
         tableView.register(NiceTableViewCell.self, forCellReuseIdentifier: NiceTableViewCell.identifier)
         
         searchBarController?.searchBar.delegate = self
         
         Mensa.all() {
             mensas in
+            self.tableView.activityIndicatorView.stopAnimating()
             self.mensas = mensas
             self.filterMensas()
             DispatchQueue.main.async {

@@ -15,7 +15,6 @@ import FirebaseStorage
 
 class RatingCell: TableViewCell {
     
-    @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var upperLabel: UILabel!
     @IBOutlet weak var lowerLabel: UILabel!
     @IBOutlet weak var userCountLabel: UILabel!
@@ -33,8 +32,6 @@ class RatingCell: TableViewCell {
         lowerLabel?.numberOfLines = 0
         lowerLabel?.font = NiceTableViewCell.detailTextLabelFont
         lowerLabel?.textColor = .white
-        userLabel?.font = RobotoFont.thin(with: 10)
-        userLabel?.textColor = .white
         userCountLabel?.font = NiceTableViewCell.textLabelFont
         userCountLabel?.textColor = .white
         if separator == nil {
@@ -51,7 +48,6 @@ class RatingCell: TableViewCell {
         for _ in 0..<rating.stars {
             stars += "★"
         }
-        userLabel.text = rating.userName
         lowerLabel.text = stars
         userCountLabel.text = "\(rating.voteCount)"
         backgroundColor = .clear

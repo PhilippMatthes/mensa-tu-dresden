@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="XSB-Pm-pSP">
-                                <rect key="frame" x="150" y="230" width="20" height="20"/>
+                                <rect key="frame" x="150" y="265" width="20" height="20"/>
                             </activityIndicatorView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lcp-Ta-slu">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
@@ -31,7 +31,7 @@
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="XSB-Pm-pSP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="C29-jZ-jN4"/>
+                            <constraint firstItem="XSB-Pm-pSP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="35" id="C29-jZ-jN4"/>
                             <constraint firstItem="lcp-Ta-slu" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Sgk-5f-Mlf"/>
                             <constraint firstItem="XSB-Pm-pSP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="fku-9s-qJX"/>
                             <constraint firstItem="lcp-Ta-slu" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="vKt-WN-D4n"/>
@@ -345,23 +345,17 @@
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZsJ-wV-bUR">
-                                                    <rect key="frame" x="8" y="39" width="240" height="71.5"/>
+                                                    <rect key="frame" x="8" y="50.5" width="240" height="49"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WGQ-r2-HHg">
-                                                            <rect key="frame" x="0.0" y="22.5" width="240" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cI7-cy-WEc">
-                                                            <rect key="frame" x="0.0" y="51" width="240" height="20.5"/>
+                                                            <rect key="frame" x="0.0" y="28.5" width="240" height="20.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fw5-fu-Tyf">
-                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="14.5"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
@@ -369,14 +363,11 @@
                                                     <constraints>
                                                         <constraint firstItem="WGQ-r2-HHg" firstAttribute="leading" secondItem="ZsJ-wV-bUR" secondAttribute="leading" id="685-jo-XnG"/>
                                                         <constraint firstItem="cI7-cy-WEc" firstAttribute="leading" secondItem="ZsJ-wV-bUR" secondAttribute="leading" id="6P6-aO-IC8"/>
+                                                        <constraint firstItem="WGQ-r2-HHg" firstAttribute="top" secondItem="ZsJ-wV-bUR" secondAttribute="top" id="8H3-wm-iKG"/>
                                                         <constraint firstAttribute="bottom" secondItem="cI7-cy-WEc" secondAttribute="bottom" id="DT3-9E-4Oz"/>
-                                                        <constraint firstItem="Fw5-fu-Tyf" firstAttribute="top" secondItem="ZsJ-wV-bUR" secondAttribute="top" id="DcI-ca-G1f"/>
-                                                        <constraint firstAttribute="trailing" secondItem="Fw5-fu-Tyf" secondAttribute="trailing" id="ElZ-O6-QAE"/>
                                                         <constraint firstItem="cI7-cy-WEc" firstAttribute="top" secondItem="WGQ-r2-HHg" secondAttribute="bottom" constant="8" id="FH2-vr-cqU"/>
                                                         <constraint firstAttribute="trailing" secondItem="cI7-cy-WEc" secondAttribute="trailing" id="afc-Sf-F4s"/>
                                                         <constraint firstAttribute="trailing" secondItem="WGQ-r2-HHg" secondAttribute="trailing" id="bJF-IB-dR8"/>
-                                                        <constraint firstItem="Fw5-fu-Tyf" firstAttribute="leading" secondItem="ZsJ-wV-bUR" secondAttribute="leading" id="dYP-Cm-G7N"/>
-                                                        <constraint firstItem="WGQ-r2-HHg" firstAttribute="top" secondItem="Fw5-fu-Tyf" secondAttribute="bottom" constant="8" id="oCj-aL-9Uu"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -401,7 +392,6 @@
                                             <outlet property="upButton" destination="VhZ-tq-V54" id="Hjt-Jy-7Ck"/>
                                             <outlet property="upperLabel" destination="WGQ-r2-HHg" id="dKg-mj-F9s"/>
                                             <outlet property="userCountLabel" destination="qOr-dR-oGV" id="4pS-lr-ytj"/>
-                                            <outlet property="userLabel" destination="Fw5-fu-Tyf" id="Mal-J3-ZJ7"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -555,8 +545,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="down" width="250" height="250"/>
-        <image name="star" width="250" height="250"/>
-        <image name="up" width="250" height="250"/>
+        <image name="down" width="500" height="500"/>
+        <image name="star" width="500" height="500"/>
+        <image name="up" width="500" height="500"/>
     </resources>
 </document>

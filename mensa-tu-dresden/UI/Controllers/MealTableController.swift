@@ -43,8 +43,10 @@ class MealTableController: UIViewController, UITableViewDataSource, UITableViewD
         
         searchBarController?.searchBar.delegate = self
         
+        tableView.activityIndicatorView.startAnimating()
         Meal.thisWeek(forMensa: mensa) {
             meals in
+            self.tableView.activityIndicatorView.stopAnimating()
             self.requestHasCompleted = true
             self.meals = meals
             self.filteredMeals = meals
